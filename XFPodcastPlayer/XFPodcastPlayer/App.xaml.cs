@@ -15,9 +15,7 @@ namespace XFPodcastPlayer
         public App()
         {
             InitializeComponent();
-
-            var kernel = new Ninject.StandardKernel(new NinjectDemoModule());
-            Container = kernel;
+                      
             MainPage = new MainPage();
         }
 

@@ -22,7 +22,7 @@
                 </OnPlatform>
             </NavigationPage.Icon>
             <x:Arguments>
-                <views:AboutPage />
+                <views:SearchView />
             </x:Arguments>
         </NavigationPage>
     </TabbedPage.Children>
