@@ -1,32 +1,31 @@
-﻿using System;
+﻿
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
-
 using Xamarin.Forms;
-
 using XFPodcastPlayer.Models;
+using XFPodcastPlayer.Services;
 using XFPodcastPlayer.ServicesInterfaces;
-using XFPodcastPlayer.Views;
+
 
 namespace XFPodcastPlayer.ViewModels
 {
-    public class Top10ViewViewModel : BaseViewModel
+    public class Top10ViewModel : BaseViewModel
     {
-        public ObservableCollection<PodcastTop10Item> Top10Items { get; set; }
+        public ObservableCollection<PodcastTop10> Top10Items { get; set; }
         public Command LoadItemsCommand { get; set; }
         private readonly IApiService _apiService;
         private readonly IDataParse _dataParse;
+       
 
-        public Top10ViewViewModel(IApiService apiService, IDataParse dataParse)
+        public Top10ViewModel()//IApiService apiService, IDataParse dataParse)
         {
-            _apiService = apiService;
-            _dataParse = dataParse;
+            _apiService = new ApiService(); //apiService;
+            _dataParse = new DataParse(); //dataParse;
             Title = "Top 10 podcast";
-            Top10Items = new ObservableCollection<PodcastTop10Item>();
+            Top10Items = new ObservableCollection<PodcastTop10>();
             LoadItemsCommand = new Command(async () =>
             {
-                await ExecuteLoadItemsCommand();
+                await Task.Run(async () => await ExecuteLoadItemsCommand());
             });
         }
 
@@ -34,7 +33,11 @@ namespace XFPodcastPlayer.ViewModels
         {
             var stream = await _apiService.GetRrsStreamAsync(Constants.PodcastTop10Url);
             var result = _dataParse.ParseTop10Rrs(stream);
-            Top10Items = new ObservableCollection<PodcastTop10Item>(result.Channel.Item);
+            foreach(var r in result)
+            {
+                Top10Items.Add(r);
+            }
+           // Top10Items = new ObservableCollection<PodcastTop10>(result);
         }
     }
 }

@@ -13,26 +13,6 @@ namespace XFPodcastPlayer.ViewModels
     public class BaseViewModel : INotifyPropertyChanged
     {
 
-
-
-        //var api = new ApiService();
-        //var dataParse = new DataParse();
-
-        //Task.Run(async() => {
-
-        //    var stream = await api.GetRrsStreamAsync(_feedUrl);
-        //    var result = dataParse.ParsePodcastRrsList(stream);
-
-        //    //var results = await api.GetPodcastInfo("1369393780");
-
-
-        //    //var result = dataParse.ParsePodcastObject(results);
-        //    if (result != null)
-        //    {
-        //        var channel = result;
-        //    }
-        //});
-
         bool isBusy = false;
         public bool IsBusy
         {

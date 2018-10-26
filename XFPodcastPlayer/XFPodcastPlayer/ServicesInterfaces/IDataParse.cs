@@ -10,7 +10,7 @@ namespace XFPodcastPlayer.ServicesInterfaces
 {
     public interface IDataParse
     {
-        PodcastTop10 ParseTop10Rrs(Stream rrsStream);
+        List<PodcastTop10> ParseTop10Rrs(Stream rrsStream);
         List<PodcastPlayItem> ParsePodcastRrsList(Stream rrsStream);
         Task<PodcastList> ParsePodcastObject(HttpResponseMessage message);
     }

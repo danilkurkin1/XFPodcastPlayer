@@ -1,8 +1,5 @@
-﻿using Ninject;
-using System;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using XFPodcastPlayer.Services;
 using XFPodcastPlayer.Views;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -10,13 +7,12 @@ namespace XFPodcastPlayer
 {
     public partial class App : Application
     {
-        public static IKernel Container { get; set; }
-
+       
         public App()
         {
             InitializeComponent();
                       
-            MainPage = new MainPage();
+            MainPage = new Top10View();
         }
 
         protected override void OnStart()

@@ -95,7 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XFPodcastPlayer\XFPodcastPlayer.csproj">
-      <Project>{BE475FC9-062E-451F-84C3-95924D0AD8EF}</Project>
+      <Project>{90DC07E3-AA22-4AE1-98CA-9AB3677C7072}</Project>
       <Name>XFPodcastPlayer</Name>
     </ProjectReference>
   </ItemGroup>
