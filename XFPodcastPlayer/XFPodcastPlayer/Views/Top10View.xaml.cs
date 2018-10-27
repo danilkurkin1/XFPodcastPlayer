@@ -10,20 +10,21 @@ namespace XFPodcastPlayer.Views
     public partial class Top10View : ContentPage
     {
         Top10ViewModel vm;
-        public Top10View()
+        public Top10View(Top10ViewModel viewModel)
         {
             InitializeComponent();
-            vm = new Top10ViewModel();
+            vm = viewModel;
+            vm.Navigation = Navigation;
             BindingContext = vm;
         }
 
-        async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
+        void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
-            var item = args.SelectedItem as PodcastDetail;
+            var item = args.SelectedItem as PodcastTop10;
             if (item == null)
                 return;
 
-            await Navigation.PushAsync(new PodcastDetailView(new PodcastDetailViewModel(item)));
+            vm.OpenPodcastDetailView.Execute(item);
 
             // Manually deselect item.
             Top10ListView.SelectedItem = null;

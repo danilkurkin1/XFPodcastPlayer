@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+              xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             x:Class="XFPodcastPlayer.Views.PlayerView">
+  <ContentView.Content>
+      <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="10" Padding="0" BackgroundColor="Aqua">
+            <ffimageloading:CachedImage HorizontalOptions="Center" VerticalOptions="Center"
+			WidthRequest="50" HeightRequest="50"
+			DownsampleToViewSize="true"
+            Source = "{Binding AudioPlayer.AudioImage}">
+                <ffimageloading:CachedImage.Transformations>
+                    <fftransformations:CircleTransformation/>
+                </ffimageloading:CachedImage.Transformations>
+            </ffimageloading:CachedImage>
+
+            <StackLayout Orientation="Vertical">
+                <Label Text="Player IS here" FontSize="Small"/>
+                <Label Text="{Binding AudioPlayer.AudioTitle}" FontSize="Small"/>
+                <Slider Maximum="100" Value="{Binding AudioPlayer.Progress}" />
+            </StackLayout>
+                <Button x:Name="PlayPause" Clicked="PlayPause_Clicked" Text="{Binding AudioPlayer.Pause}">
+                </Button>
+        </StackLayout>
+  </ContentView.Content>
+</ContentView>

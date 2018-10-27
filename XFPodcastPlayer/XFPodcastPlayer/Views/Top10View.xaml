@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:XFPodcastPlayer.Views;assembly=XFPodcastPlayer"
              x:Class="XFPodcastPlayer.Views.Top10View"
-              Title="{Binding Title}"
+             Title="{Binding Title}"
             >
      <ContentPage.ToolbarItems>
         <ToolbarItem Text="Search" Clicked="OpenSearchView">
@@ -10,7 +11,6 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            <Label Text ="{Binding Title}" />
             <ListView x:Name="Top10ListView" 
                  ItemsSource="{Binding Top10Items}"
                  VerticalOptions="FillAndExpand"
@@ -19,7 +19,7 @@
                  IsPullToRefreshEnabled="true"
                  IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                  CachingStrategy="RecycleElement"
-                
+                 ItemSelected="OnItemSelected"
                 >
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -31,6 +31,9 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <StackLayout VerticalOptions="End" Padding="0" HeightRequest="50" BackgroundColor="AliceBlue">
+                <views:PlayerView></views:PlayerView>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

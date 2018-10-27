@@ -1,12 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:views="clr-namespace:XFPodcastPlayer.Views;assembly=XFPodcastPlayer"
+            
              x:Class="XFPodcastPlayer.Views.PodcastDetailView"
              Title="{Binding Title}">
-    <StackLayout Spacing="20" Padding="15">
-        <Label Text="Text:" FontSize="Medium" />
-        <Label Text="{Binding Item.Text}" FontSize="Small"/>
-        <Label Text="Description:" FontSize="Medium" />
-        <Label Text="{Binding Item.Description}" FontSize="Small"/>
-    </StackLayout>
+    <ContentPage.Content>
+        <StackLayout>
+            <ScrollView>
+                <StackLayout>
+                    <StackLayout Spacing="20" Padding="15">
+                        <ffimageloading:CachedImage HorizontalOptions="Center" VerticalOptions="Center"
+			            WidthRequest="100" HeightRequest="100"
+			            DownsampleToViewSize="true"
+			            Source = "{Binding PodcastDetailItem.artworkUrl100}">
+                        </ffimageloading:CachedImage>
+
+                        <Label Text="Text:" FontSize="Medium" />
+                        <Label Text="{Binding PodcastDetailItem.artistId}" FontSize="Small"/>
+                        <Label Text="Description:" FontSize="Medium" />
+                        <Label Text="{Binding PodcastDetailItem.collectionName}" FontSize="Small"/>
+
+                        <ListView x:Name="PodcastPlayList" 
+                             ItemsSource="{Binding PlayList}"
+                             VerticalOptions="FillAndExpand"
+                             HasUnevenRows="true"
+                             IsPullToRefreshEnabled="false"
+                             CachingStrategy="RecycleElement"
+                             ItemSelected="OnItemSelected"
+                            >
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <StackLayout Padding="10">
+                                            <Label Text="{Binding Title}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="16" />
+                                            <Label Text="{Binding SubTitle}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="16" />
+                                            <Label Text="{Binding Description}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="16" />
+                                            <Label Text="{Binding PublicationDate}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="16" />
+                                        </StackLayout>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                    </StackLayout>
+                </StackLayout>
+            </ScrollView>
+            <StackLayout VerticalOptions="End" Padding="0" HeightRequest="50" BackgroundColor="AliceBlue">
+                <views:PlayerView></views:PlayerView>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>

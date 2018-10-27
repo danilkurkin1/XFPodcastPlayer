@@ -7,11 +7,23 @@ using Xamarin.Forms;
 
 using XFPodcastPlayer.Models;
 using XFPodcastPlayer.Services;
+using XFPodcastPlayer.ServicesInterfaces;
 
 namespace XFPodcastPlayer.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
+        public INavigation Navigation;
+        public  readonly IApiService ApiService;
+        public  readonly IDataService DataService;
+       
+
+        public BaseViewModel()
+        {
+            ApiService = new ApiService();
+            DataService = new DataService();
+          
+        }
 
         bool isBusy = false;
         public bool IsBusy

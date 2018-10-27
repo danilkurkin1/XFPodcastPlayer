@@ -11,27 +11,30 @@ namespace XFPodcastPlayer.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PodcastDetailView : ContentPage
     {
-        PodcastDetailViewModel viewModel;
+        PodcastDetailViewModel vm;
 
         public PodcastDetailView(PodcastDetailViewModel viewModel)
         {
             InitializeComponent();
 
-            BindingContext = this.viewModel = viewModel;
+            BindingContext = this.vm = viewModel;
         }
 
-        //public PodcastDetailView()
-        //{
-        //    InitializeComponent();
+        void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
+        {
+            var item = args.SelectedItem as PodcastPlayItem;
+            if (item == null)
+                return;
 
-        //    //var item = new PodcastPlayItem
-        //    //{
-        //    //    Text = "Item 1",
-        //    //    Description = "This is an item description."
-        //    //};
+            vm.PlayFile(item);
 
-        //    //viewModel = new PodcastDetailViewModel(item);
-        //    //BindingContext = viewModel;
-        //}
+            //// Manually deselect item.
+            PodcastPlayList.SelectedItem = null;
+        }
+
+        public async void PlayPause_Clicked(object sender, EventArgs e)
+        {
+            vm.AudioPlayer.PlayPause();
+        }
     }
 }

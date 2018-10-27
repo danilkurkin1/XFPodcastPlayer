@@ -11,7 +11,7 @@ namespace XFPodcastPlayerTest
 {
     public class DataParseTest
     {
-        public DataParse dataParse { get; set; } 
+        public DataService dataParse { get; set; } 
         public ApiService apiService { get; set; }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace XFPodcastPlayerTest
             var stream = ReadFile("example-podcast.rss");
 
             //Act
-            var result = dataParse.ParsePodcastRrsList(stream);
+            var result = dataParse.ParsePodcastPlayList(stream);
 
             //Assert
             Assert.NotNull(result);
@@ -46,6 +46,35 @@ namespace XFPodcastPlayerTest
 
         }
 
+        [Fact]
+        public async Task ParsePodcastHtmlList()
+        {
+            //Arrange
+            InitParcer();
+            var stream = await apiService.GetRrsStreamAsync("http://feeds.feedburner.com/pretty-basic");
+
+              //Act
+            var result = dataParse.ParsePodcastPlayList(stream);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.True(result.Count > 0);
+
+        }
+
+        [Fact]
+        public void GetUserId()
+        {
+            //Arrange
+            InitParcer();
+            string url = "https://itunes.apple.com/us/podcast/the-habitat/id1369393780?mt=2";
+
+            //Act
+            var result = dataParse.GetPodcastId(url);
+
+            //Assert
+            Assert.Equal("1369393780", result);
+        }
 
         ////n
         //[Fact]
@@ -65,11 +94,12 @@ namespace XFPodcastPlayerTest
         //}
 
 
-     
+
 
         private void InitParcer()
         {
-            dataParse = new DataParse();
+            dataParse = new DataService();
+            apiService = new ApiService();
         }
 
 
