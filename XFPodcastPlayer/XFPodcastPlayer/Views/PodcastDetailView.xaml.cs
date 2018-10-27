@@ -32,9 +32,5 @@ namespace XFPodcastPlayer.Views
             PodcastPlayList.SelectedItem = null;
         }
 
-        public async void PlayPause_Clicked(object sender, EventArgs e)
-        {
-            vm.AudioPlayer.PlayPause();
-        }
     }
 }

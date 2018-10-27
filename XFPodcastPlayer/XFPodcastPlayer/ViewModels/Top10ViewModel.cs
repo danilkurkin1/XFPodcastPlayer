@@ -19,7 +19,7 @@ namespace XFPodcastPlayer.ViewModels
         public Top10ViewModel()//IApiService apiService, IDataParse dataParse)
         {
           
-            Title = "Top 10 podcast";
+            //Title = "Top 10 podcast";
             Top10Items = new ObservableCollection<PodcastTop10>();
             LoadItemsCommand = new Command(async () =>
             {

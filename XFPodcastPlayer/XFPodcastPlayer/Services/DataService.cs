@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
@@ -63,7 +64,7 @@ namespace XFPodcastPlayer.Services
                                            select new PodcastPlayItem()
                                            {
                                                Title = item.Element("title").Value,
-                                               Description =  item.Element("description").Value,
+                                               Description = Regex.Replace(item.Element("description").Value, "<.*?>", String.Empty) ,
                                                AudioPath = string.IsNullOrEmpty(item.Element("enclosure").Value) ? item.Element("enclosure").Attribute("url").Value : item.Element("enclosure").Value,
                                                PublicationDate = DateTime.Parse(item.Element("pubDate")?.Value)
                                            };

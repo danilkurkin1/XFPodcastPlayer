@@ -1,13 +1,14 @@
 ﻿using Plugin.MediaManager;
 using Plugin.MediaManager.Abstractions.Enums;
 using Plugin.MediaManager.Abstractions.Implementations;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using XFPodcastPlayer.Models;
+using PropertyChanged;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace XFPodcastPlayer.Services
 {
+    [AddINotifyPropertyChangedInterface]
     public class MediaService
     {
         public string AudioTitle { get; set; }
@@ -24,6 +25,13 @@ namespace XFPodcastPlayer.Services
             StartTime = "";
             EndTime = "";
             CrossMediaManager.Current.PlayingChanged += Current_PlayingChanged;
+            CrossMediaManager.Current.StatusChanged += Current_StatusChanged;
+        }
+
+        private void Current_StatusChanged(object sender, Plugin.MediaManager.Abstractions.EventArguments.StatusChangedEventArgs e)
+        {
+            Progress =  100;
+
         }
 
         private void Current_PlayingChanged(object sender, Plugin.MediaManager.Abstractions.EventArguments.PlayingChangedEventArgs e)
@@ -43,7 +51,8 @@ namespace XFPodcastPlayer.Services
             
         }
 
-        public void PlayPause()
+
+        public ICommand PlayPauseCommand => new Command(() =>
         {
             if (IsPlaying)
             {
@@ -52,10 +61,11 @@ namespace XFPodcastPlayer.Services
             }
             else
             {
-                IsPlaying = false;
+                IsPlaying = true;
                 CrossMediaManager.Current.AudioPlayer.Play(CurrentFile);
             }
-        }
+        });
+
     
     }
 }

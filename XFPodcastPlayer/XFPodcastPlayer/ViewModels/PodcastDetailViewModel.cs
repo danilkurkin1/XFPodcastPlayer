@@ -10,15 +10,15 @@ namespace XFPodcastPlayer.ViewModels
     {
         public PodcastDetail PodcastDetailItem { get; set; }
         public ObservableCollection<PodcastPlayItem> PlayList { get; set; }
-        public MediaService AudioPlayer { get; set; }
+      
 
         public PodcastDetailViewModel(PodcastDetail podcastDetail)
         {
-            Title = podcastDetail.collectionName;
+            //Title = podcastDetail.collectionName;
             PodcastDetailItem = podcastDetail;
             PlayList = new ObservableCollection<PodcastPlayItem>();
             Task.Run(async () => await GetPlayList(podcastDetail.feedUrl));
-            AudioPlayer = App.MediaPlayer;
+           
         }
 
 

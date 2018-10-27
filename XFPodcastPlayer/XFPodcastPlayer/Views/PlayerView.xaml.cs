@@ -11,9 +11,5 @@ namespace XFPodcastPlayer.Views
             InitializeComponent();
         }
 
-        private void PlayPause_Clicked(object sender, System.EventArgs e)
-        {
-
-        }
     }
 }

@@ -7,7 +7,7 @@
              x:Class="XFPodcastPlayer.Views.PodcastDetailView"
              Title="{Binding Title}">
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout Padding="0">
             <ScrollView>
                 <StackLayout>
                     <StackLayout Spacing="20" Padding="15">
@@ -47,7 +47,7 @@
                     </StackLayout>
                 </StackLayout>
             </ScrollView>
-            <StackLayout VerticalOptions="End" Padding="0" HeightRequest="50" BackgroundColor="AliceBlue">
+            <StackLayout VerticalOptions="EndAndExpand" Padding="0">
                 <views:PlayerView></views:PlayerView>
             </StackLayout>
         </StackLayout>
