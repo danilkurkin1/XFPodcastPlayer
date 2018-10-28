@@ -8,14 +8,27 @@ namespace XFPodcastPlayer.Services
 {
     public class ApiService: IApiService
     {
-        public async Task<HttpResponseMessage>  GetPodcastInfo(string podcastId)
+        public async Task<HttpResponseMessage> GetPodcastInfo(string podcastId)
         {
             var uri = new Uri(string.Format(Constants.PodcastLookup, podcastId));
+            return await initiateCall(uri);
+        }
+
+        public async Task<HttpResponseMessage> SearchPodcast(string searchingParams)
+        {
+            var uri = new Uri(string.Format(Constants.PodcastSearch, searchingParams));
+            return await initiateCall(uri);
+        }
+
+
+        private async Task<HttpResponseMessage> initiateCall(Uri url)
+        {
             HttpClient client = new HttpClient();
             client.Timeout = Constants.ServerTimeout;
 
-            return await client.GetAsync(uri);
+            return await client.GetAsync(url);
         }
+
 
         public async Task<Stream> GetRrsStreamAsync(string url)
         {

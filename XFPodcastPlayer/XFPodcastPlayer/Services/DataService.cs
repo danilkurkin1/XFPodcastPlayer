@@ -53,18 +53,15 @@ namespace XFPodcastPlayer.Services
                
                 var xml = XDocument.Load(rrsStream);
 
-                 
-
                 XNamespace ns = "http://www.itunes.com/dtds/podcast-1.0.dtd";
-             
+
                 if (xml.Descendants("item").Count() > 1)
                 {
-
                     var podcastItemsList = from item in xml.Descendants("item")
                                            select new PodcastPlayItem()
                                            {
                                                Title = item.Element("title").Value,
-                                               Description = Regex.Replace(item.Element("description").Value, "<.*?>", String.Empty) ,
+                                               Description = Regex.Replace(item.Element("description").Value, "<.*?>", String.Empty),
                                                AudioPath = string.IsNullOrEmpty(item.Element("enclosure").Value) ? item.Element("enclosure").Attribute("url").Value : item.Element("enclosure").Value,
                                                PublicationDate = DateTime.Parse(item.Element("pubDate")?.Value)
                                            };
@@ -86,14 +83,36 @@ namespace XFPodcastPlayer.Services
 
         }
 
-        public async Task<PodcastList> ParsePodcastObject(HttpResponseMessage message)
+        public async Task<PodcastSearchList> ParsePodcastSearchObject(HttpResponseMessage message)
         {
             try
             {
                 if (message.IsSuccessStatusCode)
                 {
                     var content = await message.Content.ReadAsStringAsync();
-                    var result = JsonConvert.DeserializeObject<PodcastList>(content);
+                    var result = JsonConvert.DeserializeObject<PodcastSearchList>(content);
+                    return result;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                return null;
+            }
+
+        }
+
+        public async Task<PodcastLookupList> ParsePodcastObject(HttpResponseMessage message)
+        {
+            try
+            {
+                if (message.IsSuccessStatusCode)
+                {
+                    var content = await message.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<PodcastLookupList>(content);
                     return result;
                 }
 
@@ -113,6 +132,19 @@ namespace XFPodcastPlayer.Services
             var uri = new Uri(url);
             var segments = uri.Segments;
             return segments.Last().Replace("id","");
+        }
+
+        public PodcastPlayItem ConvertSearchToPodcast(PodcastSearchDetail searchDtl)
+        {
+
+            return new PodcastPlayItem()
+            {
+                Title = searchDtl.artistName,
+                Description = searchDtl.trackName,
+                AudioPath = searchDtl.previewUrl,
+                PublicationDate = searchDtl.releaseDate
+            };
+          
         }
 
     }

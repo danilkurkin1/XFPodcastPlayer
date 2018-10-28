@@ -122,6 +122,8 @@ namespace XFPodcastPlayer.Droid.Services
             };
         }
 
+        private int notificationFired = 0;
+
         private async void Play()
         {
 
@@ -130,7 +132,11 @@ namespace XFPodcastPlayer.Droid.Services
                 paused = false;
 
                 player.Start();
-               // StartForeground();
+                if (notificationFired == 0)
+                {
+                    notificationFired++;
+                    StartForeground();
+                }
                 return;
             }
 
@@ -146,7 +152,11 @@ namespace XFPodcastPlayer.Droid.Services
             {
                 await setPlayerDataSourse();
                 AquireWifiLock();
-              //  StartForeground();
+                if (notificationFired == 0)
+                {
+                    notificationFired++;
+                    StartForeground();
+                }
             }
             catch (System.Exception ex)
             {
@@ -239,6 +249,11 @@ namespace XFPodcastPlayer.Droid.Services
 
             if (player.IsPlaying)
                 player.Stop();
+
+            if (notificationFired != 0)
+            {
+                notificationFired=0;
+            }
 
             player.Reset();
             paused = false;

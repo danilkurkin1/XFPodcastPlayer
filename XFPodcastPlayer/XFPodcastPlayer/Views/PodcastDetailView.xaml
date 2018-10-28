@@ -15,8 +15,7 @@
     <ContentPage.Content>
         <StackLayout Padding="0">
             <ScrollView>
-                <StackLayout>
-                    <StackLayout Spacing="5" Padding="">
+                    <StackLayout Spacing="5" Padding="0">
                         <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand" Spacing="5" Padding="0">
                             <ffimageloading:CachedImage HorizontalOptions="Center" VerticalOptions="Center" 
 			                            WidthRequest="100" HeightRequest="100"
@@ -52,9 +51,8 @@
                             </ListView.ItemTemplate>
                         </ListView>
                     </StackLayout>
-                </StackLayout>
             </ScrollView>
-            <StackLayout VerticalOptions="EndAndExpand" Padding="0" HeightRequest="50">
+            <StackLayout VerticalOptions="End" Padding="0" HeightRequest="60"  IsVisible="{Binding AudioPlayer.ShowPlayer}">
                 <views:PlayerView></views:PlayerView>
             </StackLayout>
         </StackLayout>

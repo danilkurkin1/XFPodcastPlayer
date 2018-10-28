@@ -32,7 +32,7 @@ namespace XFPodcastPlayer.Views
 
         async void OpenSearchView(object sender, EventArgs e)
         {
-            await Navigation.PushModalAsync(new SearchView());
+            await Navigation.PushAsync(new SearchView(new SearchViewModel()));
         }
 
         protected override void OnAppearing()

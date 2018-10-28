@@ -12,7 +12,9 @@ namespace XFPodcastPlayer.ServicesInterfaces
     {
         List<PodcastTop10> ParseTop10Rrs(Stream rrsStream);
         List<PodcastPlayItem> ParsePodcastPlayList(Stream rrsStream);
-        Task<PodcastList> ParsePodcastObject(HttpResponseMessage message);
+        Task<PodcastSearchList> ParsePodcastSearchObject(HttpResponseMessage message);
+        PodcastPlayItem ConvertSearchToPodcast(PodcastSearchDetail searchDtl);
+        Task<PodcastLookupList> ParsePodcastObject(HttpResponseMessage message);
         string GetPodcastId(string url);
     }
 }

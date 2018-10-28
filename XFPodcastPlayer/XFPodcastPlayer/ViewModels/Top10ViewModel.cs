@@ -30,13 +30,13 @@ namespace XFPodcastPlayer.ViewModels
         async Task ExecuteLoadItemsCommand()
         {
             var stream = await ApiService.GetRrsStreamAsync(Constants.PodcastTop10Url);
-            var result = DataService.ParseTop10Rrs(stream);
+            var lookupResult = DataService.ParseTop10Rrs(stream);
 
             Top10Items.Clear();
             
-            foreach(var r in result)
+            foreach(var result in lookupResult)
             {
-                Top10Items.Add(r);
+                Top10Items.Add(result);
             }
          }
 

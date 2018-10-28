@@ -11,26 +11,20 @@ namespace XFPodcastPlayer.Services
     {
         public string AudioTitle { get; set; }
         public string AudioImage { get; set; }
-        public string StartTime { get; set; }
-        public string EndTime { get; set; }
-        public double Progress { get; set; }
         public bool IsPlaying { get; set; }
+        public bool ShowPlayer { get; set; }
       
         public MediaService()
         {
             AudioTitle = "";
-            StartTime = "";
-            EndTime = "";
         }
 
-       
-      
 
         public void InitPlay(PodcastPlayItem playItem, string coverImage)
         {
             IsPlaying = true;
             DependencyService.Get<IAudioStreamingService>().InitAndPlay(playItem.AudioPath, playItem.Title);
-           
+            ShowPlayer = true;
             AudioTitle = playItem.Title;
             AudioImage = coverImage;
         }

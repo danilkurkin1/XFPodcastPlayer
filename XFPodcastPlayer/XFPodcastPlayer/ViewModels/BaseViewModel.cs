@@ -1,8 +1,11 @@
 ﻿using PropertyChanged;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using XFPodcastPlayer.Models;
 using XFPodcastPlayer.Services;
 using XFPodcastPlayer.ServicesInterfaces;
+using XFPodcastPlayer.Views;
 
 namespace XFPodcastPlayer.ViewModels
 {
@@ -19,6 +22,6 @@ namespace XFPodcastPlayer.ViewModels
             DataService = new DataService();
             AudioPlayer = App.MediaPlayer;
         }
-
+        
     }
 }
