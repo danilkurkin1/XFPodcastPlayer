@@ -1,39 +1,44 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Media;
+using Android.Net;
 using Android.Net.Wifi;
 using Android.OS;
-using System;
-using Xamarin.Forms;
-using XFPodcastPlayer.Droid;
-using XFPodcastPlayer.iOS.Services;
+using Android.Runtime;
+using Android.Support.V4.App;
+using Android.Views;
+using Android.Widget;
+using Java.Lang;
 using XFPodcastPlayer.ServicesInterfaces;
 
-[assembly: Dependency(typeof(AudioStreamingService))]
-
-namespace XFPodcastPlayer.iOS.Services
+namespace XFPodcastPlayer.Droid.Services
 {
     [Service]
     [IntentFilter(new[] { ActionPlay, ActionPause, ActionStop })]
 
-    public class AudioStreamingService : Service, AudioManager.IOnAudioFocusChangeListener, IAudioStreamingService
+    public class AudioStreamingService : Service, AudioManager.IOnAudioFocusChangeListener
     {
         //Actions
         public const string ActionPlay = "com.xamarin.action.PLAY";
         public const string ActionPause = "com.xamarin.action.PAUSE";
         public const string ActionStop = "com.xamarin.action.STOP";
-               
+       
 
         private MediaPlayer player;
         private AudioManager audioManager;
         private WifiManager wifiManager;
         private WifiManager.WifiLock wifiLock;
         private bool paused;
+        private AudioAttributes mPlaybackAttributes { get; set; }
 
         private const int NotificationId = 1;
 
-      
+
         public override void OnCreate()
         {
             base.OnCreate();
@@ -41,7 +46,7 @@ namespace XFPodcastPlayer.iOS.Services
             wifiManager = (WifiManager)GetSystemService(WifiService);
         }
 
-      
+
         public override IBinder OnBind(Intent intent)
         {
             return null;
@@ -49,13 +54,41 @@ namespace XFPodcastPlayer.iOS.Services
 
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
+            
+                Task.Run(async () => {
 
-            switch (intent.Action)
-            {
-                case ActionPlay: Play(); break;
-                case ActionStop: Stop(); break;
-                case ActionPause: Pause(); break;
-            }
+                    if (player != null)
+                    {
+                        var allExtrass = intent.Extras;
+                        if (allExtrass != null)
+                        {
+                            var newAudio = allExtrass.Get("NewAudio");
+
+                            if (!string.IsNullOrEmpty((string)allExtrass.Get("NewAudio")))
+                            {
+                                Stop();
+                                await setPlayerDataSourse();
+                            }
+                        }
+                        else
+                        {
+                            switch (intent.Action)
+                            {
+                                case ActionPlay: Play(); break;
+                                case ActionStop: Stop(); break;
+                                case ActionPause: Pause(); break;
+                            }
+                        }
+                       
+
+                    }
+                    else
+                    {
+                        Play();
+                    }
+
+                });
+            
 
             //Set sticky as we are a long running operation
             return StartCommandResult.Sticky;
@@ -65,16 +98,21 @@ namespace XFPodcastPlayer.iOS.Services
         {
             player = new MediaPlayer();
 
-            player.SetAudioAttributes(new AudioAttributes.Builder()
+            mPlaybackAttributes = new AudioAttributes.Builder()
                                         .SetLegacyStreamType(Stream.Music)
                                         .SetUsage(AudioUsageKind.Media)
                                         .SetContentType(AudioContentType.Music)
-                                        .Build());
-           
+                                        .Build();
+
+            player.SetAudioAttributes(mPlaybackAttributes);
 
             player.SetWakeMode(ApplicationContext, WakeLockFlags.Partial);
 
-            player.Prepared += (sender, args) => player.Start();
+            player.Prepared += (sender, args) => {
+
+                player.Start();
+                Console.WriteLine("start playback: " + MainActivity.AudioPath);
+            };
 
             player.Completion += (sender, args) => Stop();
 
@@ -90,9 +128,9 @@ namespace XFPodcastPlayer.iOS.Services
             if (paused && player != null)
             {
                 paused = false;
-              
+
                 player.Start();
-                StartForeground();
+               // StartForeground();
                 return;
             }
 
@@ -106,44 +144,80 @@ namespace XFPodcastPlayer.iOS.Services
 
             try
             {
-                await player.SetDataSourceAsync(ApplicationContext, Android.Net.Uri.Parse(Mp3));
+                await setPlayerDataSourse();
+                AquireWifiLock();
+              //  StartForeground();
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine("Unable to start playback: " + ex);
+            }
+        }
 
-                var focusResult = audioManager.RequestAudioFocus(this, Stream.Music, AudioFocus.Gain);
+        private async Task setPlayerDataSourse()
+        {
+            try
+            {
+                await player.SetDataSourceAsync(MainActivity.AudioPath);
+
+                var mFocusRequest = new AudioFocusRequestClass.Builder(AudioFocus.Gain)
+                                   .SetAudioAttributes(mPlaybackAttributes)
+                                   .SetAcceptsDelayedFocusGain(true)
+                                   .SetWillPauseWhenDucked(true)
+                                   .SetOnAudioFocusChangeListener(this)
+                                   .Build();
+
+
+                var focusResult = audioManager.RequestAudioFocus(mFocusRequest);
                 if (focusResult != AudioFocusRequest.Granted)
                 {
                     Console.WriteLine("Could not get audio focus");
                 }
 
                 player.PrepareAsync();
-                AquireWifiLock();
-                StartForeground();
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Console.WriteLine("Unable to start playback: " + ex);
             }
+         
         }
+       
 
         /// <summary>
-        /// When we start on the foreground we will present a notification to the user
-        /// When they press the notification it will take them to the main page so they can control the music
+        /// Local NItification about player being in use
+        /// User return to the app if pressed
         /// </summary>
         private void StartForeground()
         {
+            string NOTIFICATION_CHANNEL_ID = "com.danilkurkin.XFPodcastPlayer";
+            string  channelName = "XFPodcastPlayer Background Service";
+
+            var channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationImportance.High)
+            {
+                LockscreenVisibility = NotificationVisibility.Public
+            };
+
+            //channel.setLoSetLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+
+            NotificationManager manager = GetSystemService(Context.NotificationService) as NotificationManager;
+            manager.CreateNotificationChannel(channel);
 
             var pendingIntent = PendingIntent.GetActivity(ApplicationContext, 0,
-                            new Intent(ApplicationContext, typeof(MainActivity)),
-                            PendingIntentFlags.UpdateCurrent);
+                           new Intent(ApplicationContext, typeof(MainActivity)),
+                           PendingIntentFlags.UpdateCurrent);
 
-            var notification = new Notification
-            {
-                TickerText = new Java.Lang.String("Song started!"),
-                Icon = Resource.Drawable.ic_stat_av_play_over_video
-            };
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+            Notification notification = notificationBuilder.SetOngoing(true)
+                    .SetSmallIcon(Resource.Drawable.ic_local_not_play)
+                    .SetContentTitle("Podcast Streaming")
+                    .SetContentText(MainActivity.AudioTitle)
+                    .SetContentIntent(pendingIntent)
+                    .SetCategory(Notification.CategoryService)
+                    .Build();
             notification.Flags |= NotificationFlags.OngoingEvent;
-            notification.SetLatestEventInfo(ApplicationContext, "Xamarin Streaming",
-                            "Playing music!", pendingIntent);
             StartForeground(NotificationId, notification);
+
         }
 
         private void Pause()
@@ -173,19 +247,19 @@ namespace XFPodcastPlayer.iOS.Services
         }
 
         /// <summary>
-        /// Lock the wifi so we can still stream under lock screen
+        /// Lock the wifi for streaming under lock screen
         /// </summary>
         private void AquireWifiLock()
         {
             if (wifiLock == null)
             {
-                wifiLock = wifiManager.CreateWifiLock(WifiMode.Full, "xamarin_wifi_lock");
+                wifiLock = wifiManager.CreateWifiLock(WifiMode.Full, "wifi_lock");
             }
             wifiLock.Acquire();
         }
 
         /// <summary>
-        /// This will release the wifi lock if it is no longer needed
+        /// Release the wifi lock if it is no needed
         /// </summary>
         private void ReleaseWifiLock()
         {
@@ -197,7 +271,7 @@ namespace XFPodcastPlayer.iOS.Services
         }
 
         /// <summary>
-        /// Properly cleanup of your player by releasing resources
+        /// Player cleanup - releasing resources
         /// </summary>
         public override void OnDestroy()
         {
@@ -210,10 +284,7 @@ namespace XFPodcastPlayer.iOS.Services
         }
 
         /// <summary>
-        /// For a good user experience we should account for when audio focus has changed.
-        /// There is only 1 audio output there may be several media services trying to use it so
-        /// we should act correctly based on this.  "duck" to be quiet and when we gain go full.
-        /// All applications are encouraged to follow this, but are not enforced.
+        /// If interrapted by other sound source, lower sound down 
         /// </summary>
         /// <param name="focusChange"></param>
         public void OnAudioFocusChange(AudioFocus focusChange)
@@ -230,20 +301,17 @@ namespace XFPodcastPlayer.iOS.Services
                         paused = false;
                     }
 
-                    player.SetVolume(1.0f, 1.0f);//Turn it up!
+                    player.SetVolume(1.0f, 1.0f);
                     break;
                 case AudioFocus.Loss:
-                    //We have lost focus stop!
                     Stop();
                     break;
                 case AudioFocus.LossTransient:
-                    //We have lost focus for a short time, but likely to resume so pause
                     Pause();
                     break;
                 case AudioFocus.LossTransientCanDuck:
-                    //We have lost focus but should till play at a muted 10% volume
                     if (player.IsPlaying)
-                        player.SetVolume(.1f, .1f);//turn it down!
+                        player.SetVolume(.1f, .1f);
                     break;
 
             }

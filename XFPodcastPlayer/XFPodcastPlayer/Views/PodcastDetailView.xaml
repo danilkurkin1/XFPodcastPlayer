@@ -3,51 +3,58 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:views="clr-namespace:XFPodcastPlayer.Views;assembly=XFPodcastPlayer"
-            
+             xmlns:converters="clr-namespace:XFPodcastPlayer.Converter;assembly=XFPodcastPlayer"
+             xmlns:viewcell="clr-namespace:XFPodcastPlayer.Views.Cells"
              x:Class="XFPodcastPlayer.Views.PodcastDetailView"
              Title="{Binding Title}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:DateToStringConverter x:Key="DateToStringConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout Padding="0">
             <ScrollView>
                 <StackLayout>
-                    <StackLayout Spacing="20" Padding="15">
-                        <ffimageloading:CachedImage HorizontalOptions="Center" VerticalOptions="Center"
-			            WidthRequest="100" HeightRequest="100"
-			            DownsampleToViewSize="true"
-			            Source = "{Binding PodcastDetailItem.artworkUrl100}">
-                        </ffimageloading:CachedImage>
-
-                        <Label Text="Text:" FontSize="Medium" />
-                        <Label Text="{Binding PodcastDetailItem.artistId}" FontSize="Small"/>
-                        <Label Text="Description:" FontSize="Medium" />
-                        <Label Text="{Binding PodcastDetailItem.collectionName}" FontSize="Small"/>
-
+                    <StackLayout Spacing="5" Padding="">
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand" Spacing="5" Padding="0">
+                            <ffimageloading:CachedImage HorizontalOptions="Center" VerticalOptions="Center" 
+			                            WidthRequest="100" HeightRequest="100"
+			                            DownsampleToViewSize="true"
+			                            Source = "{Binding PodcastDetailItem.artworkUrl600}">
+                            </ffimageloading:CachedImage>
+                            <StackLayout Orientation="Vertical" Spacing="2" VerticalOptions="StartAndExpand">
+                                <Label Text="Title:" FontSize="Small" />
+                                <Label Text="{Binding PodcastDetailItem.collectionName}" FontSize="Micro"/>
+                                <Label Text="Description:" FontSize="Small" />
+                                <Label Text="{Binding PodcastDetailItem.collectionName}" FontSize="Micro"/>
+                                <Label Text="Genre:" FontSize="Small" />
+                                <Label Text="{Binding PodcastDetailItem.primaryGenreName}" FontSize="Micro"/>
+                                <StackLayout Padding="0" Orientation="Horizontal" Spacing="3" HorizontalOptions="StartAndExpand">
+                                    <Label Text="Release Date:" FontSize="Micro" />
+                                    <Label Text="{Binding PodcastDetailItem.releaseDate, Converter={StaticResource DateToStringConverter}}" FontSize="Micro"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </StackLayout>
+                        <Label Text="Play List:" FontSize="Large" />
                         <ListView x:Name="PodcastPlayList" 
-                             ItemsSource="{Binding PlayList}"
-                             VerticalOptions="FillAndExpand"
-                             HasUnevenRows="true"
-                             IsPullToRefreshEnabled="false"
-                             CachingStrategy="RecycleElement"
-                             ItemSelected="OnItemSelected"
-                            >
+                                     ItemsSource="{Binding PlayList}"
+                                     VerticalOptions="FillAndExpand"
+                                     HasUnevenRows="true"
+                                     IsPullToRefreshEnabled="false"
+                                     CachingStrategy="RecycleElement"
+                                     ItemSelected="OnItemSelected"
+                                    >
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <ViewCell>
-                                        <StackLayout Padding="10">
-                                            <Label Text="{Binding Title}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="16" />
-                                            <Label Text="{Binding SubTitle}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="16" />
-                                            <Label Text="{Binding Description}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="16" />
-                                            <Label Text="{Binding PublicationDate}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="16" />
-                                        </StackLayout>
-                                    </ViewCell>
+                                    <viewcell:Top10Cell/>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-
                     </StackLayout>
                 </StackLayout>
             </ScrollView>
-            <StackLayout VerticalOptions="EndAndExpand" Padding="0">
+            <StackLayout VerticalOptions="EndAndExpand" Padding="0" HeightRequest="50">
                 <views:PlayerView></views:PlayerView>
             </StackLayout>
         </StackLayout>

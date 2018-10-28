@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:XFPodcastPlayer.Views;assembly=XFPodcastPlayer"
+             xmlns:viewcell="clr-namespace:XFPodcastPlayer.Views.Cells"
              x:Class="XFPodcastPlayer.Views.Top10View"
              Title="{Binding Title}"
             >
@@ -23,15 +24,11 @@
                 >
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Padding="10">
-                                <Label Text="{Binding Title}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="16" />
-                            </StackLayout>
-                        </ViewCell>
+                        <viewcell:Top10Cell/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <StackLayout VerticalOptions="End" Padding="0" HeightRequest="50" BackgroundColor="AliceBlue">
+            <StackLayout VerticalOptions="End" Padding="0" HeightRequest="50">
                 <views:PlayerView></views:PlayerView>
             </StackLayout>
         </StackLayout>
