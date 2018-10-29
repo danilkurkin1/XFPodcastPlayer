@@ -10,6 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\TabletViewMaster.xaml.cs" />
+    <Compile Remove="Views\TabletViewMenuItem.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Views\TabletViewMaster.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="PropertyChanged.Fody" Version="2.5.13" />
     <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.3.840" />
@@ -18,6 +27,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\Cells\PodcastDetailsCellView.xaml.cs">
+      <DependentUpon>PodcastDetailsCellView.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\PodcastDetailView.xaml.cs">
       <DependentUpon>PodcastDetailView.xaml</DependentUpon>
     </Compile>
@@ -37,6 +49,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\PlayerView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\TabletView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

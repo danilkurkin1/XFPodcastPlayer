@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:XFPodcastPlayer.Converter;assembly=XFPodcastPlayer"
+             x:Class="XFPodcastPlayer.Views.Cells.Top10CellView">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:DateToStringConverter x:Key="DateToStringConverter" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <ContentView.Content>
+        <Grid Padding="5" ColumnSpacing="10" RowSpacing="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackLayout x:Name="Title" Orientation="Horizontal" Grid.Row="0" Grid.Column="0"  Spacing="0" VerticalOptions="CenterAndExpand">
+                <Label Text="{Binding Title}" LineBreakMode="NoWrap"  Style="{DynamicResource ListItemTextStyle}" FontSize="12" />
+            </StackLayout>
+            <StackLayout x:Name="Desc" Orientation="Horizontal" Grid.Row="1" Grid.Column="0"  Spacing="0" VerticalOptions="CenterAndExpand">
+                <Label Text="{Binding Description}" LineBreakMode="WordWrap"  Style="{DynamicResource ListItemTextStyle}" FontSize="8" />
+            </StackLayout>
+            <StackLayout x:Name="Date" Orientation="Horizontal" Grid.Row="0" Grid.Column="1"  Spacing="0" VerticalOptions="CenterAndExpand">
+                <Label Text="{Binding PublicationDate, Converter={StaticResource DateToStringConverter}}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="8" />
+            </StackLayout>
+
+        </Grid>
+    </ContentView.Content>
+</ContentView>

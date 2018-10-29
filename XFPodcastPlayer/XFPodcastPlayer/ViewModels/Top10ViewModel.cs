@@ -16,10 +16,8 @@ namespace XFPodcastPlayer.ViewModels
        
        
 
-        public Top10ViewModel()//IApiService apiService, IDataParse dataParse)
+        public Top10ViewModel()
         {
-          
-            //Title = "Top 10 podcast";
             Top10Items = new ObservableCollection<PodcastTop10>();
             LoadItemsCommand = new Command(async () =>
             {
@@ -44,8 +42,12 @@ namespace XFPodcastPlayer.ViewModels
         {
             var podcastDetails = await GetPodcastDetails((PodcastTop10)selectedPodcast);
             if (podcastDetails != null)
-            {
-                await Navigation.PushAsync(new PodcastDetailView(new PodcastDetailViewModel(podcastDetails)));
+            {  
+                // TabletView handle this even separetley
+                if (Device.Idiom == TargetIdiom.Phone)
+                {
+                    await Navigation.PushAsync(new PodcastDetailView(new PodcastDetailViewModel(podcastDetails)));
+                }
             }
             else
             {

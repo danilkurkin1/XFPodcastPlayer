@@ -9,11 +9,12 @@ namespace XFPodcastPlayer.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Top10View : ContentPage
     {
-        Top10ViewModel vm;
-        public Top10View(Top10ViewModel viewModel)
+        public Top10ViewModel vm;
+        public Top10View()
         {
             InitializeComponent();
-            vm = viewModel;
+            vm = new Top10ViewModel();
+            Title = "Top 10 podcasts";
             vm.Navigation = Navigation;
             BindingContext = vm;
         }

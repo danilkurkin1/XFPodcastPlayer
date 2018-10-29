@@ -5,6 +5,7 @@
              xmlns:viewcell="clr-namespace:XFPodcastPlayer.Views.Cells"
              x:Class="XFPodcastPlayer.Views.Top10View"
              Title="{Binding Title}"
+             Icon="ic_local_not_play.png"
             >
      <ContentPage.ToolbarItems>
         <ToolbarItem Text="Search" Clicked="OpenSearchView">
@@ -13,14 +14,15 @@
     <ContentPage.Content>
         <StackLayout>
             <ListView x:Name="Top10ListView" 
-                 ItemsSource="{Binding Top10Items}"
-                 VerticalOptions="FillAndExpand"
-                 HasUnevenRows="true"
-                 RefreshCommand="{Binding LoadItemsCommand}"
-                 IsPullToRefreshEnabled="true"
-                 IsRefreshing="{Binding IsBusy, Mode=OneWay}"
-                 CachingStrategy="RecycleElement"
-                 ItemSelected="OnItemSelected"
+                      x:FieldModifier="public"
+                     ItemsSource="{Binding Top10Items}"
+                     VerticalOptions="FillAndExpand"
+                     HasUnevenRows="true"
+                     RefreshCommand="{Binding LoadItemsCommand}"
+                     IsPullToRefreshEnabled="true"
+                     IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                     CachingStrategy="RecycleElement"
+                     ItemSelected="OnItemSelected"
                 >
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -28,9 +30,15 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <StackLayout VerticalOptions="End" Padding="0" HeightRequest="60"  IsVisible="{Binding AudioPlayer.ShowPlayer}">
-                <views:PlayerView></views:PlayerView>
+            <StackLayout x:Name="PlayerVisibilityStack"  VerticalOptions="End">
+                <StackLayout.IsVisible>
+                    <OnIdiom x:TypeArguments="x:Boolean" Phone="True" Tablet="False"/>
+                </StackLayout.IsVisible>
+                <StackLayout VerticalOptions="End" Padding="0" HeightRequest="60"  IsVisible="{Binding AudioPlayer.ShowPlayer}">
+                    <views:PlayerView/>
+                </StackLayout>
             </StackLayout>
+           
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

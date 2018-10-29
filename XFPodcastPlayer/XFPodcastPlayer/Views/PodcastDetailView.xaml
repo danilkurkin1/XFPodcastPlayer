@@ -46,7 +46,7 @@
                                     >
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <viewcell:Top10Cell/>
+                                    <viewcell:PodcastDetailsCell/>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>

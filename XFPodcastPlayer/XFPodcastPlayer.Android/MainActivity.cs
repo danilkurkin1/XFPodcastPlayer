@@ -8,6 +8,7 @@ using Android.Widget;
 using Android.OS;
 using Android.Content;
 using XFPodcastPlayer.Droid.Services;
+using Xamarin.Forms;
 
 namespace XFPodcastPlayer.Droid
 {
@@ -26,6 +27,11 @@ namespace XFPodcastPlayer.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
             LoadApplication(new App());
+
+            if (Device.Idiom != TargetIdiom.Tablet)
+                RequestedOrientation = ScreenOrientation.Portrait;
+            else
+                RequestedOrientation = ScreenOrientation.Landscape;
         }
 
     }

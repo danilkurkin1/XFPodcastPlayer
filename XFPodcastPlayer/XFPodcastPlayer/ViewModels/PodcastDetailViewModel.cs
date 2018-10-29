@@ -10,7 +10,7 @@ namespace XFPodcastPlayer.ViewModels
     {
         public PodcastDetail PodcastDetailItem { get; set; }
         public ObservableCollection<PodcastPlayItem> PlayList { get; set; }
-      
+        private int index { get; set; } = 0;
 
         public PodcastDetailViewModel(PodcastDetail podcastDetail)
         {
@@ -18,7 +18,6 @@ namespace XFPodcastPlayer.ViewModels
             PodcastDetailItem = podcastDetail;
             PlayList = new ObservableCollection<PodcastPlayItem>();
             Task.Run(async () => await GetPlayList(podcastDetail.feedUrl));
-           
         }
 
 
@@ -35,6 +34,10 @@ namespace XFPodcastPlayer.ViewModels
 
         public void PlayFile(PodcastPlayItem playItem)
         {
+            PlayList[index].IsPlaying = false;
+            index = PlayList.IndexOf(playItem);
+            PlayList[index].IsPlaying = true;
+
             App.MediaPlayer.InitPlay(playItem, PodcastDetailItem.artworkUrl100);
         }
 

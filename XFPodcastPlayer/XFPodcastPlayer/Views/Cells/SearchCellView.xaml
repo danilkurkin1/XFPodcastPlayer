@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+              xmlns:converters="clr-namespace:XFPodcastPlayer.Converter;assembly=XFPodcastPlayer"
+             x:Class="XFPodcastPlayer.Views.Cells.SearchCellView">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:DateToStringConverter x:Key="DateToStringConverter" />
+            <converters:InvertBoolenConverter x:Key="InvertBool" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+  <ContentView.Content>
+        <Grid Padding="5" ColumnSpacing="10" RowSpacing="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <ffimageloading:CachedImage Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" HorizontalOptions="Center" VerticalOptions="Center" 
+			                            WidthRequest="100" HeightRequest="100"
+			                            DownsampleToViewSize="true"
+			                            Source = "{Binding artworkUrl100}">
+            </ffimageloading:CachedImage>
+
+            <StackLayout x:Name="Title" Orientation="Horizontal" Grid.Row="0" Grid.Column="1"  Spacing="0" VerticalOptions="CenterAndExpand">
+                <Label Text="{Binding collectionName}" LineBreakMode="NoWrap"  Style="{DynamicResource ListItemTextStyle}" FontSize="12" />
+            </StackLayout>
+            <StackLayout x:Name="Desc" Orientation="Horizontal" Grid.Row="1" Grid.Column="1"  Spacing="0" VerticalOptions="CenterAndExpand">
+                <Label Text="{Binding artistName}" LineBreakMode="WordWrap"  Style="{DynamicResource ListItemTextStyle}" FontSize="8" />
+            </StackLayout>
+            <StackLayout x:Name="Date" Orientation="Horizontal" Grid.Row="0" Grid.Column="2"  Spacing="0" VerticalOptions="CenterAndExpand">
+                <Label Text="{Binding releaseDate, Converter={StaticResource DateToStringConverter}}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="8" />
+            </StackLayout>
+
+            <Image Source="ic_av_play.png"  Grid.Row="1" Grid.Column="2"  IsVisible="{Binding IsPlaying, Converter={StaticResource InvertBool}}"/>
+            <Image Source="ic_av_pause.png"  Grid.Row="1" Grid.Column="2"  IsVisible="{Binding IsPlaying}"/>
+
+        </Grid>
+    </ContentView.Content>
+</ContentView>

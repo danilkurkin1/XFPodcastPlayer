@@ -11,11 +11,11 @@ namespace XFPodcastPlayer
     {
         private static MediaService _mediaPlayer;
         public static MediaService MediaPlayer => _mediaPlayer ?? (_mediaPlayer = new MediaService());
-
+      
         public App()
         {
             InitializeComponent();
-            MainPage = new NavigationPage(new Top10View(new Top10ViewModel()));
+            MainPage = new NavigationPage(new TabletView());// new NavigationPage(new Top10View()) ;
         }
 
         protected override void OnStart()

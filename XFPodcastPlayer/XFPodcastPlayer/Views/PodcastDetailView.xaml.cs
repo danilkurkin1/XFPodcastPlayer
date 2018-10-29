@@ -16,7 +16,6 @@ namespace XFPodcastPlayer.Views
         public PodcastDetailView(PodcastDetailViewModel viewModel)
         {
             InitializeComponent();
-
             BindingContext = this.vm = viewModel;
         }
 

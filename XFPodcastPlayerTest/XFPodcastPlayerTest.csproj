@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ServiceTest\" />
     <Folder Include="TestFiles\" />
   </ItemGroup>
   <ItemGroup>
