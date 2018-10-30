@@ -11,11 +11,15 @@ namespace XFPodcastPlayer
     {
         private static MediaService _mediaPlayer;
         public static MediaService MediaPlayer => _mediaPlayer ?? (_mediaPlayer = new MediaService());
-      
+
+        private static PopupService _popupService;
+        public static PopupService PopupService => _popupService ?? (_popupService = new PopupService());
+
+
         public App()
         {
             InitializeComponent();
-            MainPage = new NavigationPage(new TabletView());// new NavigationPage(new Top10View()) ;
+            MainPage = Device.Idiom == TargetIdiom.Phone ?  new NavigationPage(new Top10View()) : new NavigationPage(new TabletView());
         }
 
         protected override void OnStart()

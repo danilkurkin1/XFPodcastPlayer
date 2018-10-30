@@ -56,10 +56,11 @@ namespace XFPodcastPlayer.ViewModels
 
         public async Task GetPodcasSearchResults()
         {
+            await App.PopupService.StartLoading();
             var preSearchString = SearchRequest.Replace(" ", "+");
             var httpResponse = await ApiService.SearchPodcast(preSearchString);
             var resultList = DataService.ParsePodcastSearchObject(httpResponse).Result;
-
+            await App.PopupService.StopLoading();
             SearchResults.Clear();
 
             foreach (var result in resultList.PodcastSearchDetailList)

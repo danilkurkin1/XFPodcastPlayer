@@ -27,9 +27,10 @@ namespace XFPodcastPlayer.ViewModels
 
         async Task ExecuteLoadItemsCommand()
         {
+            await App.PopupService.StartLoading();
             var stream = await ApiService.GetRrsStreamAsync(Constants.PodcastTop10Url);
             var lookupResult = DataService.ParseTop10Rrs(stream);
-
+            await App.PopupService.StopLoading();
             Top10Items.Clear();
             
             foreach(var result in lookupResult)
@@ -58,9 +59,11 @@ namespace XFPodcastPlayer.ViewModels
 
         public async Task<PodcastDetail> GetPodcastDetails(PodcastTop10 podcastTop10)
         {
+            await App.PopupService.StartLoading();
             var podcastId = DataService.GetPodcastId(podcastTop10.Link);
             var httpResponse = await ApiService.GetPodcastInfo(podcastId);
             var result = DataService.ParsePodcastObject(httpResponse).Result;
+            await App.PopupService.StopLoading();
             if (result.PodcastDetailsCount > 0)
             {
                 return result.PodcastDetailsList[0];

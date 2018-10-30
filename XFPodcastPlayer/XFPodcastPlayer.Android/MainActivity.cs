@@ -9,6 +9,7 @@ using Android.OS;
 using Android.Content;
 using XFPodcastPlayer.Droid.Services;
 using Xamarin.Forms;
+using System.Threading.Tasks;
 
 namespace XFPodcastPlayer.Droid
 {
@@ -24,6 +25,7 @@ namespace XFPodcastPlayer.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
+            Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
             LoadApplication(new App());
@@ -32,6 +34,15 @@ namespace XFPodcastPlayer.Droid
                 RequestedOrientation = ScreenOrientation.Portrait;
             else
                 RequestedOrientation = ScreenOrientation.Landscape;
+        }
+
+        public override void OnBackPressed()
+        {
+            if (Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed))
+            {
+                Task.Run(async ()=> await App.PopupService.StopLoading());
+            }
+           
         }
 
     }

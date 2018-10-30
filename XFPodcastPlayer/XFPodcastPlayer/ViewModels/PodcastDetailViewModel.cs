@@ -23,8 +23,10 @@ namespace XFPodcastPlayer.ViewModels
 
         private async Task GetPlayList(string feedUrl)
         {
+            await App.PopupService.StartLoading();
             var stream = await ApiService.GetRrsStreamAsync(feedUrl);
             var result = DataService.ParsePodcastPlayList(stream);
+            await App.PopupService.StopLoading();
             PlayList.Clear();
             foreach (var r in result)
             {
