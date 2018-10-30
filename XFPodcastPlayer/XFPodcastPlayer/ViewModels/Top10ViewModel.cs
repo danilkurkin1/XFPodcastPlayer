@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -27,17 +28,26 @@ namespace XFPodcastPlayer.ViewModels
 
         async Task ExecuteLoadItemsCommand()
         {
-            await App.PopupService.StartLoading();
-            var stream = await ApiService.GetRrsStreamAsync(Constants.PodcastTop10Url);
-            var lookupResult = DataService.ParseTop10Rrs(stream);
-            await App.PopupService.StopLoading();
-            Top10Items.Clear();
-            
-            foreach(var result in lookupResult)
+            try
             {
-                Top10Items.Add(result);
+                await App.PopupService.StartLoading();
+                var stream = await ApiService.GetRrsStreamAsync(Constants.PodcastTop10Url);
+                var lookupResult = DataService.ParseTop10Rrs(stream);
+                await App.PopupService.StopLoading();
+                Top10Items.Clear();
+
+                foreach (var result in lookupResult)
+                {
+                    Top10Items.Add(result);
+                }
             }
-         }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+
+            }
+        }
 
         public ICommand OpenPodcastDetailView => new Command(async(selectedPodcast) =>
         {

@@ -75,24 +75,7 @@ namespace XFPodcastPlayerTest
             //Assert
             Assert.Equal("1369393780", result);
         }
-
-        ////n
-        //[Fact]
-        //public async Task ParsePodcastObject()
-        //{
-        //    //Arrange
-        //    InitParcer();
-        //    var fakeHttpResponse = getFakeHttpMessage("podcast.json");
-
-        //    //Act
-        //    PodcastList result = await dataParse.ParsePodcastObject(fakeHttpResponse);
-
-        //    //Assert
-        //    Assert.NotNull(result);
-        //    Assert.True(result.PodcastDetailsCount == 1);
-
-        //}
-
+              
 
 
 

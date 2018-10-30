@@ -52,6 +52,11 @@ namespace XFPodcastPlayer.Droid.Services
             return null;
         }
 
+        /// <summary>
+        /// Set data source for every celected url to play with stopping previouse file to play first.
+        /// /// </summary>
+  
+
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
             
@@ -124,6 +129,8 @@ namespace XFPodcastPlayer.Droid.Services
 
         private int notificationFired = 0;
 
+        //play/pause/init
+
         private async void Play()
         {
 
@@ -164,6 +171,8 @@ namespace XFPodcastPlayer.Droid.Services
             }
         }
 
+        ///Setting data source for the player (can do buffring)
+
         private async Task setPlayerDataSourse()
         {
             try
@@ -194,10 +203,9 @@ namespace XFPodcastPlayer.Droid.Services
         }
        
 
-        /// <summary>
+      
         /// Local NItification about player being in use
-        /// User return to the app if pressed
-        /// </summary>
+       
         private void StartForeground()
         {
             string NOTIFICATION_CHANNEL_ID = "com.danilkurkin.XFPodcastPlayer";
@@ -207,9 +215,7 @@ namespace XFPodcastPlayer.Droid.Services
             {
                 LockscreenVisibility = NotificationVisibility.Public
             };
-
-            //channel.setLoSetLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-
+           
             NotificationManager manager = GetSystemService(Context.NotificationService) as NotificationManager;
             manager.CreateNotificationChannel(channel);
 
@@ -230,6 +236,8 @@ namespace XFPodcastPlayer.Droid.Services
 
         }
 
+        /// player pause
+
         private void Pause()
         {
             if (player == null)
@@ -241,6 +249,8 @@ namespace XFPodcastPlayer.Droid.Services
             StopForeground(true);
             paused = true;
         }
+
+        /// Stop playing file with releasing wi-fi
 
         private void Stop()
         {
@@ -261,9 +271,9 @@ namespace XFPodcastPlayer.Droid.Services
             ReleaseWifiLock();
         }
 
-        /// <summary>
+       
         /// Lock the wifi for streaming under lock screen
-        /// </summary>
+      
         private void AquireWifiLock()
         {
             if (wifiLock == null)
@@ -273,9 +283,9 @@ namespace XFPodcastPlayer.Droid.Services
             wifiLock.Acquire();
         }
 
-        /// <summary>
+       
         /// Release the wifi lock if it is no needed
-        /// </summary>
+        
         private void ReleaseWifiLock()
         {
             if (wifiLock == null)
@@ -285,9 +295,9 @@ namespace XFPodcastPlayer.Droid.Services
             wifiLock = null;
         }
 
-        /// <summary>
+       
         /// Player cleanup - releasing resources
-        /// </summary>
+      
         public override void OnDestroy()
         {
             base.OnDestroy();
@@ -298,10 +308,9 @@ namespace XFPodcastPlayer.Droid.Services
             }
         }
 
-        /// <summary>
+       
         /// If interrapted by other sound source, lower sound down 
-        /// </summary>
-        /// <param name="focusChange"></param>
+      
         public void OnAudioFocusChange(AudioFocus focusChange)
         {
             switch (focusChange)

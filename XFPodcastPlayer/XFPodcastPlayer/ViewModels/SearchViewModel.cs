@@ -38,34 +38,29 @@ namespace XFPodcastPlayer.ViewModels
 
             App.MediaPlayer.InitPlay(DataService.ConvertSearchToPodcast(selectedObject), selectedObject.artworkUrl100);
         });
-
-        public async Task<PodcastDetail> GetPodcastDetails(string collectionId)
-        {
-            var httpResponse = await ApiService.GetPodcastInfo(collectionId);
-            var result = DataService.ParsePodcastObject(httpResponse).Result;
-            if (result.PodcastDetailsCount > 0)
-            {
-                return result.PodcastDetailsList[0];
-            }
-            else
-            {
-                return null;
-            }
-        }
-
+             
 
         public async Task GetPodcasSearchResults()
         {
-            await App.PopupService.StartLoading();
-            var preSearchString = SearchRequest.Replace(" ", "+");
-            var httpResponse = await ApiService.SearchPodcast(preSearchString);
-            var resultList = DataService.ParsePodcastSearchObject(httpResponse).Result;
-            await App.PopupService.StopLoading();
-            SearchResults.Clear();
-
-            foreach (var result in resultList.PodcastSearchDetailList)
+            try
             {
-                SearchResults.Add(result);
+                await App.PopupService.StartLoading();
+                var preSearchString = SearchRequest.Replace(" ", "+");
+                var httpResponse = await ApiService.SearchPodcast(preSearchString);
+                var resultList = DataService.ParsePodcastSearchObject(httpResponse).Result;
+                await App.PopupService.StopLoading();
+                SearchResults.Clear();
+
+                foreach (var result in resultList.PodcastSearchDetailList)
+                {
+                    SearchResults.Add(result);
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
             }
         }
     }
